@@ -1,1 +1,137 @@
+#include "Adafruit_PM25AQI.h"
+#include <Wire.h>
+#include "SparkFun_SCD4x_Arduino_Library.h" //Click here to get the library: http://librarymanager/All#SparkFun_SCD4x
+#include "ScioSense_ENS160.h"  // ENS160 library
+#include <SPI.h>
+#include <SD.h>
+#include <TimeLib.h>
+#include <DS1307RTC.h>
 
+
+//LEDs//
+
+int ledRojo = 6;
+int ledVerde = 5;
+int ledAzul = 4;
+
+
+//ScioSense_ENS160      ens160(ENS160_I2CADDR_0);
+ScioSense_ENS160      ens160(ENS160_I2CADDR_1); //ENS160_I2CADDR_0 is I2C address 0x52 and ENS160_I2CADDR_1 is I2C address 0x53
+int i=0;
+
+//SDC41
+SCD4x mySensor;
+Adafruit_PM25AQI aqi = Adafruit_PM25AQI();
+
+////SD
+
+const int chipSelect = 53;
+const int sentenceSize = 90; // caracteres atmosfericos
+char sentence[sentenceSize]; // trama del GPS
+
+unsigned long duracion;
+char* v;
+char field[15];
+unsigned char buffer[64]; // buffer array for data recieve over serial port
+int count=0; // counter for buffer array
+char field4[20];
+const int sentenceSize4 = 80;
+char sentence4[sentenceSize];
+
+/////////////////////Variables RTC//////////////
+int ano,mes,dia,hora,minuto,segundo;
+String mess, dias, segundos,minutos,horas;
+int a1,a2,a3,a4,a5;
+
+/////////////////////Variables DataLOG//////////////
+String union_variables_sat;
+String uniendo;
+char envioMOB[200];
+int pm10, pm25, pm100, dp03, dp05, dp10, dp25, dp50, dp100, aqi25, aqi100;
+int co2;
+float  temp41, hum41;
+int aqi160, tvoc, co160;
+int mics;
+
+void setup() {
+
+pinMode(ledRojo,OUTPUT);
+pinMode(ledVerde,OUTPUT);
+pinMode(ledAzul,OUTPUT);
+
+rosa();
+
+  // Wait for serial monitor to open
+  Serial.begin(115200);
+  while (!Serial) delay(10);
+  // Wait three seconds for sensor to boot up AQI!
+  delay(3000);
+
+  // There are 3 options for connectivity!
+  if (! aqi.begin_I2C()) {      // connect to the sensor over I2C
+    Serial.println("Could not find PM 2.5 sensor!");
+    while (1) delay(10);
+  }
+
+  ens160.begin();
+  Serial.println(ens160.available() ? "done." : "failed!");
+  if (ens160.available()) {
+    // Print ENS160 versions
+    Serial.print("\tRev: "); Serial.print(ens160.getMajorRev());
+    Serial.print("."); Serial.print(ens160.getMinorRev());
+    Serial.print("."); Serial.println(ens160.getBuild());
+  
+    Serial.print("\tStandard mode ");
+    Serial.println(ens160.setMode(ENS160_OPMODE_STD) ? "done." : "failed!");
+  }
+
+  Wire.begin();
+  //mySensor.enableDebugging(); // Uncomment this line to get helpful debug messages on Serial
+  //.begin will start periodic measurements for us (see the later examples for details on how to override this)
+  if (mySensor.begin() == false)
+  {
+    Serial.println(F("Sensor not detected. Please check wiring. Freezing..."));
+    while (1)
+      ;
+  }
+  Serial.println("PM25 found!");
+
+
+  Serial.print("Initializing SD card...");
+  if (!SD.begin(chipSelect)) {
+  Serial.println("Card failed, or not present");
+     //don't do anything more:
+    while (1);
+   }
+
+
+
+}
+
+void loop() {
+  verde();
+  reloj();
+  pm25_data();
+  delay(5000);
+  rojo();
+  sdc41_data();
+  delay(1000);
+  ens160_data();
+  mic_data();
+  datos_cal_aire();
+  delay(10);
+  data_sd();
+
+    horas="";
+    minutos="";
+    segundos="";
+    mess="";
+    dias="";
+    union_variables_sat="";
+    a1=0;
+    a2=0;
+    a3=0;
+    a4=0;
+    a5=0;
+    i=0;
+}
