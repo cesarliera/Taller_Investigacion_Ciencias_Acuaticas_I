@@ -1,0 +1,103 @@
+void reloj()
+{
+
+tmElements_t tm;
+  if (RTC.read(tm)) {
+    //Serial.print(tmYearToCalendar(tm.Year));
+    ano=(tmYearToCalendar(tm.Year));
+    //Serial.print(tm.Month);
+    mes=(tm.Month);
+    //Serial.print(tm.Day);
+    dia=(tm.Day);
+    //Serial.print("_");
+    //print2digits(tm.Hour);
+    hora=(tm.Hour);
+    //print2digits(tm.Minute);
+    minuto=(tm.Minute);
+    //print2digits(tm.Second);
+    segundo=(tm.Second);
+
+    //Serial.print("_");
+  }
+    Serial.print(ano);
+
+  if (mes>= 0 && mes < 10) {
+  mess.concat("0");
+  mess.concat(mes);
+  Serial.print(mess);
+  a5=1;
+  }
+  else
+  {
+    mes=(tm.Month);
+    Serial.print(mes);
+  }
+
+  if (dia>= 0 && dia < 10) {
+  dias.concat("0");
+  dias.concat(dia);
+  Serial.print(dias);
+  a4=1;
+  }
+  else
+  {
+    dia=(tm.Day);
+    Serial.print(dia);
+  }
+
+
+    Serial.print(",");
+
+  if (hora>= 0 && hora < 10) {
+  horas.concat("0");
+  horas.concat(hora);
+  Serial.print(horas);
+  a1=1;
+  }
+  else
+  {
+    hora=(tm.Hour);
+    Serial.print(hora);
+  }
+
+  if (minuto >= 0 && minuto < 10) {
+  minutos.concat("0");
+  minutos.concat(minuto);
+  Serial.print(minutos);
+  a2=1;
+  }
+  else
+  {
+    minuto=(tm.Minute);
+    Serial.print(minuto);
+  }
+
+  if (segundo >= 0 && segundo < 10) {
+  segundos.concat("0");
+  segundos.concat(segundo);
+  Serial.print(segundos);
+  a3=1;
+  }
+  else
+  {
+    segundo=(tm.Second);
+    Serial.print(segundo);
+  }
+
+Serial.println();
+
+}
+
+void limpieza_flags()
+{
+    horas="";
+    minutos="";
+    segundos="";
+    mess="";
+    dias="";
+    a1=0;
+    a2=0;
+    a3=0;
+    a4=0;
+    a5=0;
+}
