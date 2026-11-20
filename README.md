@@ -1,5 +1,3 @@
 # Taller_Investigacion_Ciencias_Acuaticas_I
 
-
-## Descarga Adafruit Unified Sensor Driver
-Para utilizar el sensor DTH
+Aqui se encuentran los códigos de las prácticas generadas para el Taller, de la Licenciatura de Ciencias de la Tierra
