@@ -1,3 +1,10 @@
+//LEDs//
+
+int ledRojo = 6;
+int ledVerde = 5;
+int ledAzul = 4;
+
+
 int ledRojo = 2;
 int ledVerde = 3;
 int ledAzul = 4;
