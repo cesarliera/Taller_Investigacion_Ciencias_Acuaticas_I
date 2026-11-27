@@ -16,7 +16,7 @@ void loop()
 {
   reloj();
   limpieza_flags();
-  //delay(5);
+  //delay(5); //Cambiar a 1000
 }
 
 
@@ -103,10 +103,10 @@ tmElements_t tm;
   else
   {
     segundo=(tm.Second);
-    Serial.print(segundo);
+    Serial.println(segundo);
   }
 
-Serial.print(",");
+//Serial.print(",");
 
 }
 
